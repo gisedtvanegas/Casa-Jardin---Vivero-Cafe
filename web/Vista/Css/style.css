@@ -1100,6 +1100,20 @@ body::before {
     } 
 }
 
+/* Ajustes globales para todas las vistas, incluidas las sesiones activas. */
+@media (max-width: 768px) {
+  body::before { inset: 8px; border-radius: 14px; }
+  .barrainicio, .barrainicioprin { width: calc(100% - 20px); top: 8px; padding: 12px 16px; border-radius: 16px; }
+  .logotitulosof img { width: 38px; }
+  .logotitulosof h1 { font-size: 1.2rem; }
+  .navegacion ul { gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .navegacion a { display: block; padding: 6px 8px; font-size: .82rem; }
+  .Formulario { width: calc(100% - 24px); box-sizing: border-box; }
+  .table-scroll { width: 100%; }
+  .crud-table th, .crud-table td { padding: 8px; }
+  .caja { width: min(440px, calc(100vw - 28px)); padding: 18px; }
+}
+
 /* Reserva index*/
 .reservain {
   background-color: #bcd4e5;

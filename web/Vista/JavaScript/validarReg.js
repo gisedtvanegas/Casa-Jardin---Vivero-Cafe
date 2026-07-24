@@ -34,6 +34,10 @@ function validarRegistro() {
         alert("La contraseña es obligatoria");
         return false;
     }
+    if (clave.length < 8) {
+        alert("La clave debe tener al menos 8 caracteres");
+        return false;
+    }
     return true;
 }
 function validarLogin() {

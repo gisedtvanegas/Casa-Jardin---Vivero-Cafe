@@ -27,7 +27,7 @@ public class HorariosDAO {
         Connection con = conexion.getConn();
 
         
-        String sql = "INSERT INTO Horarios (hora_ini, hora_fin) VALUES (?, ?)";
+        String sql = "INSERT INTO horarios (hora_ini, hora_fin) VALUES (?, ?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setTime(1, horario.gethora_ini());
@@ -49,7 +49,7 @@ public class HorariosDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idHorarios, hora_ini, hora_fin FROM Horarios WHERE idHorarios = ?";
+            String querySQL = "SELECT idHorarios, hora_ini, hora_fin FROM horarios WHERE idHorarios = ?";
 
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idHorarios);
@@ -73,7 +73,7 @@ public class HorariosDAO {
    
     public boolean actualizarHorario(Horarios horario) throws SQLException {
         boolean actualizado = false;
-        String sql = "UPDATE Horarios SET hora_ini=?, hora_fin=? WHERE idHorarios=?";
+        String sql = "UPDATE horarios SET hora_ini=?, hora_fin=? WHERE idHorarios=?";
         Connection con = conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -94,7 +94,7 @@ public class HorariosDAO {
     
     public boolean eliminarHorario(int id) throws SQLException {
         boolean eliminado = false;
-        String sql = "DELETE FROM Horarios WHERE idHorarios = ?";
+        String sql = "DELETE FROM horarios WHERE idHorarios = ?";
         Connection con = conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -114,7 +114,7 @@ public class HorariosDAO {
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
         try {
-            String sql = "SELECT idHorarios, hora_ini, hora_fin FROM Horarios";
+            String sql = "SELECT idHorarios, hora_ini, hora_fin FROM horarios";
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

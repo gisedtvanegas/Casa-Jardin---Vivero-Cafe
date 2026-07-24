@@ -27,12 +27,33 @@
                     <li><a href="${ctx}/PanelUsuario.jsp">Inicio</a></li>
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
-                    <li><a href="${ctx}/Vista/MenuUsuario.jsp">Menú</a></li>
+                    <li><a href="${ctx}/MenuUsuario">Menú</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>
     </div>
-    <main class="Formulario">
+    <main class="mis-reservas">
+        <h2 class="titulo-form">Mis reservas</h2>
+        <c:if test="${empty listaReservasUsuario}"><p class="mensaje">No hay ningún registro de reservas.</p></c:if>
+        <c:if test="${not empty listaReservasUsuario}">
+            <div class="table-scroll"><table class="crud-table"><thead><tr><th>Actividad</th><th>Personas</th><th>Fecha</th><th>Hora</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
+            <c:forEach var="r" items="${listaReservasUsuario}"><tr>
+                <form action="${ctx}/ReservaUsuario" method="post"><input type="hidden" name="idReserva" value="${r.idReserva}">
+                <td><c:out value="${r.descripcionActividad}"/></td>
+                <td><c:choose><c:when test="${r.puedeEditar}"><input type="number" name="num_personas" min="1" max="10" value="${r.num_personas}" required></c:when><c:otherwise>${r.num_personas}</c:otherwise></c:choose></td>
+                <td><c:choose><c:when test="${r.puedeEditar}"><input type="date" name="fecha" value="${r.fecha}" required></c:when><c:otherwise>${r.fecha}</c:otherwise></c:choose></td>
+                <td><c:choose><c:when test="${r.puedeEditar}"><input type="time" name="hora" value="${r.hora}" required></c:when><c:otherwise>${r.hora}</c:otherwise></c:choose></td>
+                <td><c:out value="${r.descripcionEstado}"/></td><td class="row-actions">
+                    <c:if test="${r.puedeEditar}"><button type="submit" name="accion" value="actualizar">Actualizar</button></c:if>
+                    <c:if test="${not r.cancelada}"><button type="submit" name="accion" value="cancelar">Cancelar</button></c:if>
+                    <c:if test="${not r.puedeEditar and not r.cancelada}"><small>Solo es editable con tres días de antelación.</small></c:if>
+                </td></form></tr></c:forEach>
+            </tbody></table></div>
+        </c:if>
+    </main>
+    <button type="button" class="nuevo-lapiz" id="abrirReserva" aria-label="Crear reserva">&#9998;</button>
+    <main id="nuevaReservaModal" class="Formulario modal-nueva-reserva" aria-hidden="true">
+        <button type="button" class="cerrar-nueva-reserva" id="cerrarReserva" aria-label="Cerrar">&times;</button>
         <h2 class="titulo-form">Reserva tu actividad</h2>
         <c:if test="${not empty mensaje}"><p class="mensaje"><c:out value="${mensaje}"/></p></c:if>
         <form id="reservaForm" action="${ctx}/ReservaUsuario" method="post">
@@ -45,7 +66,7 @@
                 <label>Correo<input value="<c:out value='${usuarioReserva.correo}'/>" readonly></label>
             </section>
             
-            <label>Personas<input type="number" name="num_personas" min="1" required></label>
+            <label>Personas<input type="number" name="num_personas" min="1" max="10" required></label>
             <label>Fecha<input type="date" name="fecha" required></label>
             <label>Hora<input type="time" name="hora" required></label>
             <label>Disponibilidad
@@ -112,5 +133,20 @@
             <a href="${ctx}/PanelUsuario.jsp">Aceptar</a></div>
     </div>
     <script src="${ctx}/Vista/JavaScript/pagosfa.js"></script>
+    <style>
+        .mis-reservas { max-width: 1100px; margin: 150px auto 2rem; padding: 0 1rem; }
+        .nuevo-lapiz { position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 20; width: 54px; height: 54px; border: 0; border-radius: 50%; background: #166534; color: #fff; font-size: 1.6rem; cursor: pointer; box-shadow: 0 4px 12px #0005; }
+        .modal-nueva-reserva { display: none; position: fixed; inset: 0; z-index: 50; overflow: auto; margin: 0; padding: 4rem max(1rem, calc((100vw - 700px) / 2)); background: rgba(0,0,0,.55); }
+        .modal-nueva-reserva.activo { display: block; }
+        .modal-nueva-reserva > form, .modal-nueva-reserva > .titulo-form, .modal-nueva-reserva > section, .modal-nueva-reserva > label { background: #fff; }
+        .cerrar-nueva-reserva { position: fixed; top: 1rem; right: 1.5rem; z-index: 51; border: 0; border-radius: 50%; width: 40px; height: 40px; font-size: 1.8rem; cursor: pointer; }
+        #pagoModal, #exito { z-index: 3000; }
+        @media (max-width: 700px) { .mis-reservas { margin-top: 180px; } .mis-reservas .crud-table { font-size: .85rem; } .modal-nueva-reserva { padding: 4.5rem 1rem 2rem; } }
+    </style>
+    <script>
+        const modalReserva = document.getElementById('nuevaReservaModal');
+        document.getElementById('abrirReserva').addEventListener('click', () => { modalReserva.classList.add('activo'); modalReserva.setAttribute('aria-hidden', 'false'); });
+        document.getElementById('cerrarReserva').addEventListener('click', () => { modalReserva.classList.remove('activo'); modalReserva.setAttribute('aria-hidden', 'true'); });
+    </script>
 </body>
 </html>

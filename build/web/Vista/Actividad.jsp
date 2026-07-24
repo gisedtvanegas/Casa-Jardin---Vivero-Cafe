@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actividades | Casa y Jardín</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=4">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
     <div class="barrainicio">
@@ -28,13 +29,12 @@
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li> 
                     <li><a href="${ctx}/MenuPublico">Menú</a></li>
                     <li><a href="${ctx}/Iniciar">Iniciar Sesión</a></li>
-                    <li><a href="${ctx}/Vista/Registrarse.jsp">Registrarse</a></li>
+                    <li><a href="${ctx}/CargarRegistro">Registrarse</a></li>
                 </ul>
            </nav>
     </div>
     <main class="actividades-publicas"> 
-        <h2>Explora nuestras actividades</h2>
-        <p class="subtitulo-actividades">Haz clic en cada tarjeta para verla por el reverso.</p>
+        <h2>Explora nuestras actividades</h2> <br> <br>
         <section class="tarjetas-actividades" aria-label="Actividades disponibles">
             <c:forEach var="actividad" items="${listaActividades}" varStatus="estado">
                 <article class="tarjeta-actividad">
@@ -42,14 +42,14 @@
                         <span class="tarjeta-actividad-inner">
                             <span class="tarjeta-actividad-frente">
                                 <c:choose>
-                                    <c:when test="${estado.index == 0}"><img src="${ctx}/Vista/Imagenes/prueba.jpg" alt="Imagen de prueba de la actividad"></c:when>
+                                    <c:when test="${estado.index == 0}"><img src="${ctx}/Vista/Imagenes/ceramica.jpg" alt="Imagen de prueba de la actividad"></c:when>
                                     <c:when test="${estado.index == 1}"><img src="${ctx}/Vista/Imagenes/foto.jpg" alt="Imagen de prueba de la actividad"></c:when>
                                     <c:when test="${estado.index == 2}"><img src="${ctx}/Vista/Imagenes/fotoprueba.jpg" alt="Imagen de prueba de la actividad"></c:when>
                                     <c:otherwise><img src="${ctx}/Vista/Imagenes/prueba.prueba.jpg" alt="Imagen de prueba de la actividad"></c:otherwise>
                                 </c:choose>
                                 <span class="tarjeta-sombra"></span>
                                 <span class="tarjeta-actividad-titulo">${actividad.descripcion_actividad}</span>
-                                <span class="tarjeta-indicacion">Ver información ↻</span>
+                                <span class="tarjeta-indicacion"> Dale click para ver información</span>
                             </span>
                             <span class="tarjeta-actividad-reverso"><span>text</span><span class="tarjeta-indicacion">Volver ↻</span></span>
                         </span>

@@ -27,14 +27,13 @@
                     <li><a href="${ctx}/PanelUsuario.jsp">Inicio</a></li>
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
-                    <li><a href="${ctx}/MenuPublico">Menú</a></li>
+                    <li><a href="${ctx}/MenuUsuario">Menú</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>
     </div>
     <main class="actividades-publicas"> 
-        <h2>Explora nuestras actividades</h2>
-        <p class="subtitulo-actividades">Haz clic en cada tarjeta para verla por el reverso.</p>
+        <h2>Explora nuestras actividades</h2> <br> <br>
         <section class="tarjetas-actividades" aria-label="Actividades disponibles">
             <c:forEach var="actividad" items="${listaActividades}" varStatus="estado">
                 <article class="tarjeta-actividad">

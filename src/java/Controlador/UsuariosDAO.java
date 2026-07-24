@@ -23,6 +23,10 @@ public class UsuariosDAO {
 
         String sql = "INSERT INTO usuarios (nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+        if (con == null) {
+            throw new SQLException("No fue posible conectar con la base de datos.");
+        }
+
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, usuarios.getnombre());
             ps.setString(2, usuarios.getapellido());
@@ -41,7 +45,8 @@ public class UsuariosDAO {
 
             System.out.println("Usuario insertado con éxito.");
         } catch (SQLException e) {
-            System.out.println("Error al insertar usuario." + e.getMessage());
+            System.out.println("Error al insertar usuario: " + e.getMessage());
+            throw e;
         }
         return insertado;
     }
@@ -52,7 +57,7 @@ public class UsuariosDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM Usuarios WHERE documento = ? ";
+            String querySQL = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM usuarios WHERE documento = ? ";
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setString(1, documento);
 
@@ -123,7 +128,7 @@ public class UsuariosDAO {
     Connection con = conexion.getConn();
 
     try {
-            String querySQL = "SELECT nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM Usuarios WHERE idUsuarios = ?";
+            String querySQL = "SELECT nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM usuarios WHERE idUsuarios = ?";
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idUsuarios);
 
@@ -202,7 +207,7 @@ public class UsuariosDAO {
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
         try {
-            String sql = "SELECT documento FROM Usuarios WHERE documento = ?";
+            String sql = "SELECT documento FROM usuarios WHERE documento = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, documento);
             ResultSet rs = ps.executeQuery();
@@ -218,7 +223,7 @@ public class UsuariosDAO {
         List<Usuarios> lista = new ArrayList<>();
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
-        String sql = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM Usuarios";  
+        String sql = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM usuarios";
 
         try (PreparedStatement ps = con.prepareStatement(sql)){
             ResultSet rs = ps.executeQuery();

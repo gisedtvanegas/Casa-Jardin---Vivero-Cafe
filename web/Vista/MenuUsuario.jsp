@@ -23,12 +23,12 @@
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
-            <nav class="navegacion">
+            <nav class="navegacion" id="nav-menu">
                 <ul>
                     <li><a href="${ctx}/PanelUsuario.jsp">Inicio</a></li>
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
-                    <li><a href="${ctx}/MenuPublico">Menú</a></li>
+                    <li><a href="${ctx}/MenuUsuario">Menú</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>

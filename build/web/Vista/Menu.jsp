@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Menú | Casa y Jardín</title>
         <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=4">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     </head>
 <body>
     <div class="barrainicio">
@@ -29,18 +30,19 @@
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li> 
                     <li><a href="${ctx}/MenuPublico">Menú</a></li>
                     <li><a href="${ctx}/Iniciar">Iniciar Sesión</a></li>
-                    <li><a href="${ctx}/Vista/Registrarse.jsp">Registrarse</a></li>
+                    <li><a href="${ctx}/CargarRegistro">Registrarse</a></li>
                 </ul>
            </nav>
     </div>
-                    <main class="menu-publico"> <br> <br>
+                <main class="menu-publico"> <br> <br><h2>Conoce nuestro delicioso menú y pidelo cuando vayas a visitarnos</h2> <br> <br>
                             <section class="tarjetas-menu" aria-label="Productos del menú">
                                 <c:forEach var="producto" items="${productos}">
                                     <article class="tarjeta-menu">
                                         <c:choose>
                                             <c:when test="${producto.tieneImagen}"><img src="${ctx}/ProductoImagen?id=${producto.idProducto}" alt="${producto.nombre}"></c:when>
                                             <c:otherwise><img src="${ctx}/Vista/Imagenes/fotoprueba.jpg" alt="Imagen de muestra del producto"></c:otherwise>
-                                        </c:choose><div class="tarjeta-menu-contenido">
+                                        </c:choose>
+                                            <div class="tarjeta-menu-contenido">
                                             <h3><c:out value="${producto.nombre}"/></h3>
                                             <p><c:out value="${producto.descripcion}"/></p><strong>
                                                 <fmt:formatNumber   value="${producto.precio}" type="currency" currencySymbol="$" maxFractionDigits="0"/>

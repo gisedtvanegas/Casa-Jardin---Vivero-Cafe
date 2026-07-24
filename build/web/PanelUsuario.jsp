@@ -26,7 +26,7 @@
                     <li><a href="${ctx}/index.jsp">Inicio</a></li>
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
-                    <li><a href="${ctx}/Vista/MenuUsuario.jsp">Menú</a></li>
+                    <li><a href="${ctx}/MenuUsuario">Menú</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>

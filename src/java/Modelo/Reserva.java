@@ -14,6 +14,10 @@ public class Reserva {
     private int Estado_reserva_idEstado_reserva;
     private int Actividad_idActividad;
     private int Pagos_idPagos;
+    private String descripcionEstado;
+    private String descripcionActividad;
+    private boolean puedeEditar;
+    private boolean cancelada;
 
     public Reserva() {
     }
@@ -101,6 +105,15 @@ public class Reserva {
     public void setPagos_idPagos(int Pagos_idPagos) {
         this. Pagos_idPagos = Pagos_idPagos;
     }
+
+    public String getDescripcionEstado() { return descripcionEstado; }
+    public void setDescripcionEstado(String descripcionEstado) { this.descripcionEstado = descripcionEstado; }
+    public String getDescripcionActividad() { return descripcionActividad; }
+    public void setDescripcionActividad(String descripcionActividad) { this.descripcionActividad = descripcionActividad; }
+    public boolean isPuedeEditar() { return puedeEditar; }
+    public void setPuedeEditar(boolean puedeEditar) { this.puedeEditar = puedeEditar; }
+    public boolean isCancelada() { return cancelada; }
+    public void setCancelada(boolean cancelada) { this.cancelada = cancelada; }
 
     public void setHora() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody

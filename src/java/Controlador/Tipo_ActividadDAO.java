@@ -28,7 +28,7 @@ public class Tipo_ActividadDAO {
         Conexion conexion = new Conexion();
         Connection con = (Connection) conexion.getConn();
 
-        String sql = "INSERT INTO Tipo_Actividad (nombre_activi) VALUES (?)";
+        String sql = "INSERT INTO tipo_actividad (nombre_activi) VALUES (?)";
         try (PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, Mitipoactividad.getnombre_activi());
@@ -50,7 +50,7 @@ public class Tipo_ActividadDAO {
       Connection con = conexion.getConn();
       
       try{ 
-          String querySQL = "select idTipo_Actividad, nombre_activi FROM Tipo_Actividad WHERE idTipo_Actividad = ?";
+          String querySQL = "select idTipo_Actividad, nombre_activi FROM tipo_actividad WHERE idTipo_Actividad = ?";
           
           PreparedStatement ps = con.prepareStatement(querySQL);
           ps.setInt(1, idTipo_Actividad);
@@ -73,7 +73,7 @@ public class Tipo_ActividadDAO {
 
     public boolean actualizarTipoActividad(Tipo_Actividad Mitipoactividad) throws SQLException {
         boolean actualizado = false;
-        String sql = "UPDATE Tipo_Actividad SET nombre_activi = ? WHERE idTipo_Actividad = ?";
+        String sql = "UPDATE tipo_actividad SET nombre_activi = ? WHERE idTipo_Actividad = ?";
         Conexion conexion = new Conexion();
         Connection con = (Connection) conexion.getConn();
 
@@ -94,7 +94,7 @@ public class Tipo_ActividadDAO {
 
     public boolean eliminarTipoActividad (int idTipo_Actividad) throws SQLException {
         boolean eliminado = false;
-        String sql = "DELETE FROM Tipo_Actividad WHERE idTipo_Actividad = ?";
+        String sql = "DELETE FROM tipo_actividad WHERE idTipo_Actividad = ?";
         Conexion conexion = new Conexion();
         Connection con = (Connection) conexion.getConn();
 
@@ -115,7 +115,7 @@ public class Tipo_ActividadDAO {
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
         try {
-            String sql = "SELECT idTipo_Actividad, nombre_activi FROM Tipo_Actividad";
+            String sql = "SELECT idTipo_Actividad, nombre_activi FROM tipo_actividad";
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -131,5 +131,3 @@ public class Tipo_ActividadDAO {
     }
 
 }
-    
-

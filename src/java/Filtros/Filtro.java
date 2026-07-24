@@ -39,6 +39,10 @@ public class Filtro implements Filter {
             res.sendRedirect(req.getContextPath() + "/MenuPublico");
             return;
         }
+        if (path.endsWith("/Vista/MenuUsuario.jsp")) {
+            res.sendRedirect(req.getContextPath() + "/MenuUsuario");
+            return;
+        }
 
         // Excluir recursos estáticos
         if (path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg")) {
@@ -53,7 +57,6 @@ public class Filtro implements Filter {
             || path.endsWith("Actividad.jsp")
             || path.endsWith("Historia.jsp")
             || path.endsWith("Menu.jsp")
-            || path.endsWith("Reserva.jsp")
             || path.contains("CargarRegistro")
             || path.contains("Registrarse")
             || path.contains("Iniciar")
@@ -73,8 +76,32 @@ public class Filtro implements Filter {
             return;
         }
 
+        // Las pantallas y endpoints de administracion requieren el rol 1.
+        // Sin esta comprobacion un usuario autenticado podia abrirlos escribiendo
+        // directamente la URL.
+        if (esRecursoAdministrativo(path) && !Integer.valueOf(1).equals(session.getAttribute("perfil"))) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "No tiene permisos para acceder a esta seccion.");
+            return;
+        }
+
         chain.doFilter(request, response);
             }
+
+    private boolean esRecursoAdministrativo(String path) {
+        return path.endsWith("/PanelAdmin.jsp")
+                || path.contains("_admi.jsp")
+                || path.endsWith("/Vista/UsuariosAdmi.jsp")
+                || path.endsWith("/Vista/Roles.jsp")
+                || path.endsWith("/UsuarioAdmi")
+                || path.endsWith("/Actividad")
+                || path.endsWith("/Horarios")
+                || path.endsWith("/Disponibilidaad")
+                || path.endsWith("/Tipodocumento")
+                || path.endsWith("/TipoActividad")
+                || path.endsWith("/Roles")
+                || path.endsWith("/ReservaAdmi")
+                || path.endsWith("/ProductosMenu");
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {}

@@ -23,7 +23,7 @@ public class Estado_reservaDAO {
 
     public int obtenerOCrearEstadoConfirmada() throws SQLException {
         Connection con = conexion.getConn();
-        String consulta = "SELECT idEstado_reserva FROM Estado_reserva WHERE descripcion_esta = ? LIMIT 1";
+        String consulta = "SELECT idEstado_reserva FROM estado_reserva WHERE descripcion_esta = ? LIMIT 1";
         try (PreparedStatement ps = con.prepareStatement(consulta)) {
             ps.setString(1, "Confirmada");
             try (ResultSet rs = ps.executeQuery()) {
@@ -33,7 +33,7 @@ public class Estado_reservaDAO {
             }
         }
 
-        String insertar = "INSERT INTO Estado_reserva (descripcion_esta) VALUES (?)";
+        String insertar = "INSERT INTO estado_reserva (descripcion_esta) VALUES (?)";
         try (PreparedStatement ps = con.prepareStatement(insertar, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, "Confirmada");
             if (ps.executeUpdate() == 0) {
@@ -49,7 +49,7 @@ public class Estado_reservaDAO {
         boolean insertado = false;
         Connection con = conexion.getConn();
        
-        String sql = "INSERT INTO Estado_reserva (descripcion_esta) VALUES (?)";
+        String sql = "INSERT INTO estado_reserva (descripcion_esta) VALUES (?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, estado.getdescripcion_esta());
@@ -71,7 +71,7 @@ public class Estado_reservaDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idEstado_reserva, descripcion_esta FROM Estado_reserva WHERE idEstado_reserva = ?";
+            String querySQL = "SELECT idEstado_reserva, descripcion_esta FROM estado_reserva WHERE idEstado_reserva = ?";
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idEstado_reserva);
 
@@ -93,7 +93,7 @@ public class Estado_reservaDAO {
    
     public boolean actualizarEstadoReserva(Estado_reserva estado) throws SQLException {
         boolean actualizado = false;
-        String sql = "UPDATE Estado_reserva SET descripcion_esta=? WHERE idEstado_Reserva=?";
+        String sql = "UPDATE estado_reserva SET descripcion_esta=? WHERE idEstado_Reserva=?";
         Connection con = conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -112,7 +112,7 @@ public class Estado_reservaDAO {
   
     public boolean eliminarEstadoReserva(int id) throws SQLException {
         boolean eliminado = false;
-        String sql = "DELETE FROM Estado_reserva WHERE idEstado_Reserva = ?";
+        String sql = "DELETE FROM estado_reserva WHERE idEstado_Reserva = ?";
         Connection con = conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -130,7 +130,7 @@ public class Estado_reservaDAO {
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
         try {
-            String sql = "SELECT idEstado_reserva, descripcion_esta FROM Estado_reserva";
+            String sql = "SELECT idEstado_reserva, descripcion_esta FROM estado_reserva";
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -145,5 +145,3 @@ public class Estado_reservaDAO {
         return lista;
     }
 }
-    
-

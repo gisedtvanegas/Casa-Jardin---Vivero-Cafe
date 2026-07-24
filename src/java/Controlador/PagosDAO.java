@@ -5,7 +5,6 @@
 package Controlador;
 
 import Modelo.Pagos;
-import Modelo.Roles;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,10 +21,10 @@ import java.util.List;
 public class PagosDAO {
 
     public int insertarPagoYObtenerId(Pagos pago) throws SQLException {
-        String sql = "INSERT INTO pagos (estado_pago) VALUES (?)";
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
 
+        String sql = "INSERT INTO pagos (estado_pago) VALUES (?)";
         try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, pago.getestado_pago());
             if (ps.executeUpdate() == 0) {
@@ -62,7 +61,7 @@ public class PagosDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idPagos, estado_pago FROM Pagos WHERE idPagos = ? ";
+            String querySQL = "SELECT idPagos, estado_pago FROM pagos WHERE idPagos = ? ";
 
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idPagos);
@@ -125,7 +124,7 @@ public class PagosDAO {
     Conexion conexion = new Conexion();
     Connection con = conexion.getConn();
     try {
-        String sql = "SELECT idPagos, estado_pago FROM Pagos";
+        String sql = "SELECT idPagos, estado_pago FROM pagos";
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

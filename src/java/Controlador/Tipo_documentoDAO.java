@@ -50,7 +50,7 @@ public class Tipo_documentoDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idTipo_documento, descripcion_doc FROM Tipo_documento WHERE idTipo_documento = ? ";
+            String querySQL = "SELECT idTipo_documento, descripcion_doc FROM tipo_documento WHERE idTipo_documento = ? ";
 
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idTipo_documento);
@@ -116,7 +116,7 @@ public class Tipo_documentoDAO {
     Conexion conexion = new Conexion();
     Connection con = conexion.getConn();
     try {
-        String sql = "SELECT idTipo_documento, descripcion_doc FROM Tipo_documento";
+        String sql = "SELECT idTipo_documento, descripcion_doc FROM tipo_documento";
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

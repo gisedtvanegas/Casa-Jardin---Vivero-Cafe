@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
 public class ReservaDAO {
 
@@ -22,7 +23,7 @@ public class ReservaDAO {
             con.setAutoCommit(false);
             reserva.setEstado_reserva_idEstado_reserva(obtenerEstadoConfirmada(con));
             reserva.setPagos_idPagos(insertarPagoPagado(con));
-            String sql = "INSERT INTO Reserva (num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO reserva (num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             try (PreparedStatement ps = con.prepareStatement(sql)) {
                 ps.setInt(1, reserva.getNum_personas()); ps.setTime(2, reserva.getHora()); ps.setDate(3, reserva.getFecha());
                 ps.setInt(4, reserva.getUsuarios_idUsuarios()); ps.setInt(5, reserva.getDisponibilidad_idDisponibilidad());
@@ -38,11 +39,11 @@ public class ReservaDAO {
     }
 
     private int obtenerEstadoConfirmada(Connection con) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement("SELECT idEstado_reserva FROM Estado_reserva WHERE descripcion_esta = ? LIMIT 1")) {
+        try (PreparedStatement ps = con.prepareStatement("SELECT idEstado_reserva FROM estado_reserva WHERE descripcion_esta = ? LIMIT 1")) {
             ps.setString(1, "Confirmada");
             try (ResultSet rs = ps.executeQuery()) { if (rs.next()) return rs.getInt(1); }
         }
-        try (PreparedStatement ps = con.prepareStatement("INSERT INTO Estado_reserva (descripcion_esta) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = con.prepareStatement("INSERT INTO estado_reserva (descripcion_esta) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, "Confirmada"); ps.executeUpdate();
             try (ResultSet claves = ps.getGeneratedKeys()) { if (claves.next()) return claves.getInt(1); }
         }
@@ -50,9 +51,14 @@ public class ReservaDAO {
     }
 
     private int insertarPagoPagado(Connection con) throws SQLException {
-        try (PreparedStatement ps = con.prepareStatement("INSERT INTO Pagos (estado_pago) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, "Pagado"); ps.executeUpdate();
-            try (ResultSet claves = ps.getGeneratedKeys()) { if (claves.next()) return claves.getInt(1); }
+        try (PreparedStatement ps = con.prepareStatement("INSERT INTO pagos (estado_pago) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, "Pagado");
+            ps.executeUpdate();
+            try (ResultSet claves = ps.getGeneratedKeys()) {
+                if (claves.next()) {
+                    return claves.getInt(1);
+                }
+            }
         }
         throw new SQLException("No se pudo registrar el pago.");
     }
@@ -63,8 +69,8 @@ public class ReservaDAO {
 
         boolean insertarConId = Mireserva.getidReserva() > 0;
         String sql = insertarConId
-                ? "INSERT INTO Reserva (idReserva, num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-                : "INSERT INTO Reserva (num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                ? "INSERT INTO reserva (idReserva, num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                : "INSERT INTO reserva (num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             int i = 1;
@@ -98,7 +104,7 @@ public class ReservaDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idReserva, num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos FROM Reserva WHERE idReserva = ? ";
+            String querySQL = "SELECT idReserva, num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos FROM reserva WHERE idReserva = ? ";
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idReserva);
 
@@ -128,7 +134,7 @@ public class ReservaDAO {
     public boolean actualizarReserva(Reserva reserva) throws SQLException {
         boolean actualizado = false;
 
-        String sql = "UPDATE Reserva SET num_personas = ?, hora = ?, fecha = ?, Usuarios_idUsuarios = ?, Disponibilidad_idDisponibilidad = ?, Estado_reserva_idEstado_reserva = ?, Actividad_idActividad = ?, Pagos_idPagos = ? WHERE idReserva = ?";
+        String sql = "UPDATE reserva SET num_personas = ?, hora = ?, fecha = ?, Usuarios_idUsuarios = ?, Disponibilidad_idDisponibilidad = ?, Estado_reserva_idEstado_reserva = ?, Actividad_idActividad = ?, Pagos_idPagos = ? WHERE idReserva = ?";
         Conexion conexion = new Conexion();
         Connection con = (Connection) conexion.getConn();
 
@@ -157,7 +163,7 @@ public class ReservaDAO {
 
     public boolean eliminarReserva(int id) throws SQLException {
         boolean eliminado = false;
-        String sql = "DELETE FROM Reserva WHERE idReserva = ?";
+        String sql = "DELETE FROM reserva WHERE idReserva = ?";
         Conexion conexion = new Conexion();
         Connection con = (Connection) conexion.getConn();
 
@@ -174,12 +180,72 @@ public class ReservaDAO {
         }
         return eliminado;
     }
+
+    public List<Reserva> listarReservasPorUsuario(int idUsuario) {
+        List<Reserva> lista = new ArrayList<>();
+        String sql = "SELECT r.idReserva, r.num_personas, r.hora, r.fecha, r.Usuarios_idUsuarios, "
+                + "r.Disponibilidad_idDisponibilidad, r.Estado_reserva_idEstado_reserva, r.Actividad_idActividad, r.Pagos_idPagos, "
+                + "e.descripcion_esta, a.descripcion_actividad "
+                + "FROM reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
+                + "JOIN actividad a ON a.idActividad = r.Actividad_idActividad "
+                + "WHERE r.Usuarios_idUsuarios = ? ORDER BY r.fecha DESC, r.hora DESC";
+        try (Connection con = new Conexion().getConn(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idUsuario);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Reserva r = new Reserva();
+                    r.setidReserva(rs.getInt(1)); r.setNum_personas(rs.getInt(2)); r.setHora(rs.getTime(3)); r.setFecha(rs.getDate(4));
+                    r.setUsuarios_idUsuarios(rs.getInt(5)); r.setDisponibilidad_idDisponibilidad(rs.getInt(6));
+                    r.setEstado_reserva_idEstado_reserva(rs.getInt(7)); r.setActividad_idActividad(rs.getInt(8)); r.setPagos_idPagos(rs.getInt(9));
+                    r.setDescripcionEstado(rs.getString(10)); r.setDescripcionActividad(rs.getString(11));
+                    r.setCancelada("Cancelada".equalsIgnoreCase(r.getDescripcionEstado()));
+                    r.setPuedeEditar(!r.isCancelada() && r.getFecha().toLocalDate().isAfter(LocalDate.now().plusDays(3)));
+                    lista.add(r);
+                }
+            }
+        } catch (Exception e) { System.out.println("Error al listar reservas del usuario: " + e.getMessage()); }
+        return lista;
+    }
+
+    public boolean actualizarReservaUsuario(int idReserva, int idUsuario, int personas, Date fecha, java.sql.Time hora) throws SQLException {
+        String sql = "UPDATE reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
+                + "SET r.num_personas = ?, r.fecha = ?, r.hora = ? WHERE r.idReserva = ? AND r.Usuarios_idUsuarios = ? "
+                + "AND LOWER(e.descripcion_esta) <> 'cancelada' AND r.fecha > DATE_ADD(CURDATE(), INTERVAL 3 DAY)";
+        try (Connection con = new Conexion().getConn(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, personas); ps.setDate(2, fecha); ps.setTime(3, hora); ps.setInt(4, idReserva); ps.setInt(5, idUsuario);
+            return ps.executeUpdate() == 1;
+        }
+    }
+
+    public boolean cancelarReservaUsuario(int idReserva, int idUsuario) throws SQLException {
+        try (Connection con = new Conexion().getConn()) {
+            if (con == null) throw new SQLException("No hay conexion con la base de datos.");
+            int estadoCancelada = obtenerOCrearEstado(con, "Cancelada");
+            String sql = "UPDATE reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
+                    + "SET r.Estado_reserva_idEstado_reserva = ? WHERE r.idReserva = ? AND r.Usuarios_idUsuarios = ? "
+                    + "AND LOWER(e.descripcion_esta) <> 'cancelada'";
+            try (PreparedStatement ps = con.prepareStatement(sql)) {
+                ps.setInt(1, estadoCancelada); ps.setInt(2, idReserva); ps.setInt(3, idUsuario);
+                return ps.executeUpdate() == 1;
+            }
+        }
+    }
+
+    private int obtenerOCrearEstado(Connection con, String descripcion) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("SELECT idEstado_reserva FROM estado_reserva WHERE descripcion_esta = ? LIMIT 1")) {
+            ps.setString(1, descripcion); try (ResultSet rs = ps.executeQuery()) { if (rs.next()) return rs.getInt(1); }
+        }
+        try (PreparedStatement ps = con.prepareStatement("INSERT INTO estado_reserva (descripcion_esta) VALUES (?)", Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, descripcion); ps.executeUpdate(); try (ResultSet rs = ps.getGeneratedKeys()) { if (rs.next()) return rs.getInt(1); }
+        }
+        throw new SQLException("No se pudo crear el estado de reserva.");
+    }
     public List<Reserva> listarReserva() {
     List<Reserva> lista = new ArrayList<>();
     Conexion conexion = new Conexion();
     Connection con = conexion.getConn();
     try {
-        String sql = "SELECT idReserva, num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos FROM Reserva";
+        String sql = "SELECT idReserva, num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos FROM reserva";
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

@@ -17,6 +17,33 @@ import java.sql.ResultSet;
 
 public class RolesDAO {
 
+    /** Devuelve un rol no administrativo y lo crea si aun no existe. */
+    public int obtenerOCrearRolPublico() throws SQLException {
+        String buscar = "SELECT idRoles FROM roles WHERE idRoles <> 1 ORDER BY idRoles LIMIT 1";
+        try (Connection con = new Conexion().getConn()) {
+            if (con == null) {
+                throw new SQLException("No fue posible conectar con la base de datos.");
+            }
+            try (PreparedStatement ps = con.prepareStatement(buscar);
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("idRoles");
+                }
+            }
+            try (PreparedStatement ps = con.prepareStatement(
+                    "INSERT INTO roles (descripcion_rol) VALUES ('Usuario')",
+                    Statement.RETURN_GENERATED_KEYS)) {
+                ps.executeUpdate();
+                try (ResultSet claves = ps.getGeneratedKeys()) {
+                    if (claves.next()) {
+                        return claves.getInt(1);
+                    }
+                }
+            }
+        }
+        throw new SQLException("No se pudo preparar el rol de usuario.");
+    }
+
     public boolean insertarRol(Roles rol) throws SQLException {
         boolean insertado = false;
         Conexion conexion = new Conexion();
@@ -42,7 +69,7 @@ public class RolesDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idRoles, descripcion_rol FROM Roles WHERE idRoles = ?";
+            String querySQL = "SELECT idRoles, descripcion_rol FROM roles WHERE idRoles = ?";
 
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idRoles);
@@ -105,7 +132,7 @@ public class RolesDAO {
     Conexion conexion = new Conexion();
     Connection con = conexion.getConn();
     try {
-        String sql = "SELECT idRoles, descripcion_rol FROM Roles";
+        String sql = "SELECT idRoles, descripcion_rol FROM roles";
         PreparedStatement ps = con.prepareStatement(sql);
         ResultSet rs = ps.executeQuery();
         while (rs.next()) {

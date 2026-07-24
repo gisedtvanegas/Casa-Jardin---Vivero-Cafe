@@ -28,7 +28,7 @@ public class Lista_preciosDAO {
         boolean insertado = false;
         Connection con = conexion.getConn();
 
-        String sql = "INSERT INTO Lista_Precios (descrip_precio) VALUES (?)";
+        String sql = "INSERT INTO lista_precios (descrip_precio) VALUES (?)";
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, precio.getdescrip_precio());
@@ -49,7 +49,7 @@ public class Lista_preciosDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idLista_precios, descrip_precio FROM Lista_precios WHERE idLista_precios = ?";
+            String querySQL = "SELECT idLista_precios, descrip_precio FROM lista_precios WHERE idLista_precios = ?";
 
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idLista_precios);
@@ -72,7 +72,7 @@ public class Lista_preciosDAO {
 
     public boolean actualizarListaPrecios(Lista_precios precio) throws SQLException {
         boolean actualizado = false;
-        String sql = "UPDATE Lista_Precios SET descrip_precio=? WHERE idLista_Precios=?";
+        String sql = "UPDATE lista_precios SET descrip_precio=? WHERE idLista_Precios=?";
         Connection con = conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -91,7 +91,7 @@ public class Lista_preciosDAO {
 
     public boolean eliminarListaPrecios(int id) throws SQLException {
         boolean eliminado = false;
-        String sql = "DELETE FROM Lista_Precios WHERE idLista_Precios = ?";
+        String sql = "DELETE FROM lista_precios WHERE idLista_Precios = ?";
         Connection con = conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -111,7 +111,7 @@ public class Lista_preciosDAO {
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
         try {
-            String sql = "SELECT idLista_precios, descrip_precio FROM Lista_Precios";
+            String sql = "SELECT idLista_precios, descrip_precio FROM lista_precios";
             PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

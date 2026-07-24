@@ -29,7 +29,7 @@
                     <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li> 
                     <li><a href="${ctx}/MenuPublico">Menú</a></li>
                     <li><a href="${ctx}/Iniciar">Iniciar Sesión</a></li>
-                    <li><a href="${ctx}/Vista/Registrarse.jsp">Registrarse</a></li>
+                    <li><a href="${ctx}/CargarRegistro">Registrarse</a></li>
                 </ul>
            </nav>
     </div>
