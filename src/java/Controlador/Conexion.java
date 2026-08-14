@@ -10,16 +10,11 @@ import java.sql.DriverManager;
 public class Conexion {
     private Connection conn;
     private String driver = "com.mysql.cj.jdbc.Driver";
-
-    // Si existen variables de entorno (Railway), las usa.
-    // Si no existen (ejecución local en tu PC), usa tus valores de siempre.
     private String host    = getEnvOrDefault("MYSQLHOST", "localhost");
     private String port    = getEnvOrDefault("MYSQLPORT", "3307");
     private String user    = getEnvOrDefault("MYSQLUSER", "root");
     private String password = getEnvOrDefault("MYSQLPASSWORD", "");
-    // Railway crea por defecto la base de datos "railway". En produccion se
-    // conserva la prioridad de MYSQLDATABASE para no dejar la configuracion fija.
-    private String baseDatos = getEnvOrDefault("MYSQLDATABASE", "railway");
+    private String baseDatos = getEnvOrDefault("MYSQLDATABASE", "viverodb");
 
     private String railwayUrl = getEnvOrDefault("MYSQL_URL", "");
     private String url = construirUrl();

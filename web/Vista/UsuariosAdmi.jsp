@@ -8,6 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Usuarios - Casa y Jardin</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css">
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body class="admin-crud-page">
     <main class="admin-crud-container">
@@ -87,7 +88,7 @@
                                 <td>
                                     <input type="text" name="telefono" value="${u.telefono}" required>
                                     <input type="email" name="correo" value="${u.correo}" required>
-                                    <input type="password" name="clave" value="${u.clave}" required>
+                                    <input type="password" name="clave" placeholder="Nueva contraseña (opcional)" minlength="8" autocomplete="new-password">
                                 </td>
                                 <td>
                                     <input type="date" name="fecha_nac" value="${u.fecha_nac}" required>

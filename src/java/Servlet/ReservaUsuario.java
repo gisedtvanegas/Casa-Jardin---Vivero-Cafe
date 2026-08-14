@@ -1,7 +1,6 @@
 package Servlet;
 
 import Controlador.ActividadDAO;
-import Controlador.DisponibilidadDAO;
 import Controlador.ReservaDAO;
 import Controlador.Tipo_documentoDAO;
 import Controlador.UsuariosDAO;
@@ -57,13 +56,18 @@ public class ReservaUsuario extends HttpServlet {
             reserva.setFecha(Date.valueOf(request.getParameter("fecha")));
             reserva.setHora(Time.valueOf(normalizarHora(request.getParameter("hora"))));
             reserva.setUsuarios_idUsuarios(idUsuario);
-            reserva.setDisponibilidad_idDisponibilidad(enteroPositivo(request.getParameter("Disponibilidad_idDisponibilidad")));
             reserva.setActividad_idActividad(enteroPositivo(request.getParameter("Actividad_idActividad")));
             boolean insertado = reservaDao.insertarReservaPagada(reserva);
             request.setAttribute("mensaje", insertado ? "Reserva realizada con éxito." : "No fue posible registrar la reserva.");
             request.setAttribute("reservaRealizada", insertado);
             }
-        } catch (Exception e) { request.setAttribute("mensaje", "No fue posible registrar la reserva: " + e.getMessage()); }
+        } catch (Exception e) {
+            if (e.getMessage() != null && e.getMessage().contains("CUPO_NO_DISPONIBLE")) {
+                request.setAttribute("mensaje", "Lo lamentamos, no contamos con la disponibilidad de espacio para el día que elegiste la reserva. Intenta nuevamente con una fecha distinta");
+            } else {
+                request.setAttribute("mensaje", "No fue posible registrar la reserva: " + e.getMessage());
+            }
+        }
         cargarFormulario(request);
         request.getRequestDispatcher(VISTA_RESERVA).forward(request, response);
     }
@@ -76,7 +80,6 @@ public class ReservaUsuario extends HttpServlet {
     }
 
     private void cargarFormulario(HttpServletRequest request) {
-        request.setAttribute("listaDisponibilidades", new DisponibilidadDAO().Disponibilidad());
         request.setAttribute("listaActividades", new ActividadDAO().Actividad());
         HttpSession sesion = request.getSession(false);
         if (sesion != null && sesion.getAttribute("idUsuario") instanceof Integer) {

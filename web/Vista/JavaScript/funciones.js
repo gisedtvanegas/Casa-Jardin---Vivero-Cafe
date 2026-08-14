@@ -3,13 +3,14 @@ const btnIzq = document.getElementById("left");
 const btnDer = document.getElementById("right");
 
 let index = 0;
-const total = contenedor.children.length;
+const total = contenedor ? contenedor.children.length : 0;
 
 function moverCarrusel() {
   const imgWidth = contenedor.children[0].clientWidth;
   contenedor.style.transform = `translateX(-${index * imgWidth}px)`;
 }
 
+if (contenedor && btnDer && btnIzq && total) {
 btnDer.addEventListener("click", () => {
   index = (index + 1) % total; // si llega al final, vuelve a 0
   moverCarrusel();
@@ -19,12 +20,13 @@ btnIzq.addEventListener("click", () => {
   index = (index - 1 + total) % total; // si llega al inicio, vuelve al último
   moverCarrusel();
 });
+}
 
 
 /* Menú hamburguesa */
 (function () {
   const toggle = document.getElementById('nav-toggle');
-  const nav    = document.getElementById('nav-menu');
+  const nav    = document.getElementById('nav-menu') || document.querySelector('.navegacion');
   if (!toggle || !nav) return;
 
   toggle.addEventListener('click', function () {

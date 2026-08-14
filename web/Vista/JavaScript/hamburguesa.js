@@ -2,7 +2,7 @@
    Se puede incluir en cualquier página que tenga .barrainicio */
 (function () {
   var toggle = document.getElementById('nav-toggle');
-  var nav    = document.getElementById('nav-menu');
+  var nav    = document.getElementById('nav-menu') || document.querySelector('.navegacion');
   if (!toggle || !nav) return;
 
   toggle.addEventListener('click', function () {

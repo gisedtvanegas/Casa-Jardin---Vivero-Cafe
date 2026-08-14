@@ -1,6 +1,7 @@
 package Servlet;
 
 import Controlador.UsuariosDAO;
+import Controlador.PasswordSecurity;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -33,7 +34,7 @@ public class CambiarClave extends HttpServlet {
             request.setAttribute("mensaje", "Las contraseñas no coinciden.");
         } else {
             int idUsuario = (Integer) sesion.getAttribute("recuperacionUsuarioId");
-            if (new UsuariosDAO().actualizarClave(idUsuario, clave)) {
+            if (new UsuariosDAO().actualizarClave(idUsuario, PasswordSecurity.hash(clave))) {
                 sesion.removeAttribute("recuperacionCodigo");
                 sesion.removeAttribute("recuperacionUsuarioId");
                 sesion.removeAttribute("recuperacionVence");

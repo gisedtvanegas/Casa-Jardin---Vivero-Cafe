@@ -12,6 +12,7 @@ import java.util.List;
 
 public class ProductoMenuDAO {
     private void asegurarTabla(Connection con) throws SQLException {
+        if (con == null) throw new SQLException("No fue posible conectar con la base de datos.");
         String sql = "CREATE TABLE IF NOT EXISTS producto_menu ("
                 + "idProducto INT AUTO_INCREMENT PRIMARY KEY, "
                 + "nombre VARCHAR(120) NOT NULL, descripcion VARCHAR(500) NOT NULL, "

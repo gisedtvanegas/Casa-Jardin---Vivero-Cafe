@@ -25,14 +25,38 @@ public class Filtro implements Filter {
 
         String path = req.getRequestURI();
 
+        // Las vistas dinámicas nunca quedan disponibles desde el historial. Al
+        // volver atrás el navegador debe pedirlas de nuevo y este filtro valida
+        // la sesión antes de entregarlas.
+        if (!esRecursoEstatico(path)) {
+            impedirCache(res);
+        }
+
         // La raiz del proyecto es publica y debe resolver siempre a la portada.
         if (path.equals(req.getContextPath()) || path.equals(req.getContextPath() + "/")) {
-            res.sendRedirect(req.getContextPath() + "/index.jsp");
+            res.sendRedirect(destinoInicio(req, session));
             return;
         }
 
+        if (sesionActiva(session) && esPaginaAccesoPublica(path)) {
+            res.sendRedirect(destinoInicio(req, session));
+            return;
+        }
+
+        if (path.endsWith("/Vista/ActividadUsuario.jsp")) {
+            if (!sesionActiva(session)) {
+                res.sendRedirect(req.getContextPath() + "/Vista/InicioSesion.jsp");
+            } else if (Integer.valueOf(1).equals(session.getAttribute("perfil"))) {
+                res.sendRedirect(req.getContextPath() + "/PanelAdmin.jsp");
+            } else {
+                res.sendRedirect(req.getContextPath() + "/ActividadesUsuario");
+            }
+            return;
+        }
         if (path.endsWith("/Vista/Actividad.jsp")) {
-            res.sendRedirect(req.getContextPath() + "/ActividadesPublicas");
+            res.sendRedirect(req.getContextPath() + (sesionActiva(session)
+                    && !Integer.valueOf(1).equals(session.getAttribute("perfil"))
+                    ? "/ActividadesUsuario" : "/ActividadesPublicas"));
             return;
         }
         if (path.endsWith("/Vista/Menu.jsp")) {
@@ -45,7 +69,7 @@ public class Filtro implements Filter {
         }
 
         // Excluir recursos estáticos
-        if (path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".jpg")) {
+        if (esRecursoEstatico(path)) {
             chain.doFilter(request, response);
             return;
         }
@@ -71,7 +95,7 @@ public class Filtro implements Filter {
         }
 
         // Validar sesión para páginas privadas
-        if (session == null || session.getAttribute("perfil") == null) {
+        if (!sesionActiva(session)) {
             res.sendRedirect(req.getContextPath() + "/Vista/InicioSesion.jsp");
             return;
         }
@@ -101,6 +125,36 @@ public class Filtro implements Filter {
                 || path.endsWith("/Roles")
                 || path.endsWith("/ReservaAdmi")
                 || path.endsWith("/ProductosMenu");
+    }
+
+    private boolean esRecursoEstatico(String path) {
+        String ruta = path.toLowerCase();
+        return ruta.endsWith(".css") || ruta.endsWith(".js") || ruta.endsWith(".png")
+                || ruta.endsWith(".jpg") || ruta.endsWith(".jpeg") || ruta.endsWith(".gif")
+                || ruta.endsWith(".svg") || ruta.endsWith(".webp") || ruta.endsWith(".ico");
+    }
+
+    private void impedirCache(HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+    }
+
+    private boolean sesionActiva(HttpSession session) {
+        return session != null && session.getAttribute("perfil") instanceof Integer;
+    }
+
+    private boolean esPaginaAccesoPublica(String path) {
+        return path.endsWith("/index.jsp")
+                || path.endsWith("/Vista/InicioSesion.jsp")
+                || path.endsWith("/Vista/Registrarse.jsp");
+    }
+
+    private String destinoInicio(HttpServletRequest request, HttpSession session) {
+        if (sesionActiva(session) && Integer.valueOf(1).equals(session.getAttribute("perfil"))) {
+            return request.getContextPath() + "/PanelAdmin.jsp";
+        }
+        return request.getContextPath() + "/PanelUsuario.jsp";
     }
 
     @Override

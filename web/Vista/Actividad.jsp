@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actividades | Casa y Jardín</title>
-    <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=4">
+    <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=5">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
@@ -36,22 +36,29 @@
     <main class="actividades-publicas"> 
         <h2>Explora nuestras actividades</h2> <br> <br>
         <section class="tarjetas-actividades" aria-label="Actividades disponibles">
-            <c:forEach var="actividad" items="${listaActividades}" varStatus="estado">
+            <c:forEach var="actividad" items="${listaActividades}">
                 <article class="tarjeta-actividad">
                     <button class="tarjeta-actividad-boton" type="button" aria-pressed="false" aria-label="Ver información de la actividad ${actividad.descripcion_actividad}">
                         <span class="tarjeta-actividad-inner">
+                            <%-- FRENTE: imagen dinámica desde BD o imagen por defecto --%>
                             <span class="tarjeta-actividad-frente">
                                 <c:choose>
-                                    <c:when test="${estado.index == 0}"><img src="${ctx}/Vista/Imagenes/ceramica.jpg" alt="Imagen de prueba de la actividad"></c:when>
-                                    <c:when test="${estado.index == 1}"><img src="${ctx}/Vista/Imagenes/foto.jpg" alt="Imagen de prueba de la actividad"></c:when>
-                                    <c:when test="${estado.index == 2}"><img src="${ctx}/Vista/Imagenes/fotoprueba.jpg" alt="Imagen de prueba de la actividad"></c:when>
-                                    <c:otherwise><img src="${ctx}/Vista/Imagenes/prueba.prueba.jpg" alt="Imagen de prueba de la actividad"></c:otherwise>
+                                    <c:when test="${not empty actividad.foto_actividad}">
+                                        <img src="${ctx}/${actividad.foto_actividad}" alt="Imagen de la actividad ${actividad.descripcion_actividad}">
+                                    </c:when>
                                 </c:choose>
                                 <span class="tarjeta-sombra"></span>
                                 <span class="tarjeta-actividad-titulo">${actividad.descripcion_actividad}</span>
-                                <span class="tarjeta-indicacion"> Dale click para ver información</span>
+                                <span class="tarjeta-indicacion">Dale click para ver información</span>
                             </span>
-                            <span class="tarjeta-actividad-reverso"><span>text</span><span class="tarjeta-indicacion">Volver ↻</span></span>
+                            <%-- REVERSO: información + botón de agenda --%>
+                            <span class="tarjeta-actividad-reverso">
+                                <span class="tarjeta-actividad-informacion">
+                                    <c:out value="${actividad.informacion}" />
+                                </span>
+                                <a class="tarjeta-agenda-btn" href="${ctx}/Iniciar">Agenda tu actividad!</a>
+                                <span class="tarjeta-indicacion">Volver ↻</span>
+                            </span>
                         </span>
                     </button>
                 </article>
@@ -89,6 +96,6 @@
         </div>
     </footer>    
     <script src="${ctx}/Vista/JavaScript/hamburguesa.js"></script>
-    <script src="${ctx}/Vista/JavaScript/actividades.js?v=20260720-2"></script>
+    <script src="${ctx}/Vista/JavaScript/actividades.js?v=20260731"></script>
 </body>
 </html>

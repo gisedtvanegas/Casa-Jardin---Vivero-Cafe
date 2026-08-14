@@ -5,8 +5,9 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa y Jardin - Vivero Café</title>
+    <title>Panel Usuario - Casa y Jardin</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css">
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>   
     <div class="barrainicio">
@@ -21,12 +22,13 @@
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
-            <nav class="navegacion">
+            <nav class="navegacion" id="nav-menu">
                 <ul>
-                    <li><a href="${ctx}/index.jsp">Inicio</a></li>
-                    <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
+                    <li><a href="${ctx}/PanelUsuario.jsp">Inicio</a></li>
+                    <li><a href="${ctx}/ActividadesUsuario">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
                     <li><a href="${ctx}/MenuUsuario">Menú</a></li>
+                    <li><a href="${ctx}/PerfilUsuario">Mi Perfil</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -78,7 +80,8 @@
                     <p class="paso-texto">Felicidades!! Ya tendrás realizada tu reserva!!</p>
                 </div>
             </div>
-            <a href="${ctx}/Vista/ReservaUsuario.jsp" class="agendare">Agenda tu Reserva!</a>
+            <a href="${ctx}/ReservaUsuario" class="agendare">Agenda tu Reserva!</a>
+        </div>
         <div class="historia">
             <h2>Historia</h2>
             <p>
@@ -91,7 +94,6 @@
                 especial para que cada cliente tenga una experiencia única.
             </p>
         </div>
-    </form>
     <footer class="footer">
         <div class="footer-contenedor">
                 <div class="footer-info">
@@ -121,5 +123,6 @@
     </footer> 
 
     <script src="${ctx}/Vista/JavaScript/funciones.js"></script>
+    <script src="${ctx}/Vista/JavaScript/navegacion-sesion.js"></script>
 </body>
 </html> 

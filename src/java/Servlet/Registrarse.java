@@ -2,6 +2,7 @@ package Servlet;
 import Controlador.Tipo_documentoDAO;
 import Controlador.UsuariosDAO;
 import Controlador.RolesDAO;
+import Controlador.PasswordSecurity;
 import Modelo.Usuarios;
 import java.io.IOException;
 import java.sql.Date;
@@ -68,7 +69,7 @@ public class Registrarse extends HttpServlet {
             mostrarFormulario(request, response, "La fecha de nacimiento no es valida.");
             return;
         }
-        usuario.setclave(clave);
+        usuario.setclave(PasswordSecurity.hash(clave));
         usuario.setTipo_documento_idTipo_documento(Tipo_documento_idTipo_documento);
         
         LocalDate fechaCad = LocalDate.now().plusYears(1);

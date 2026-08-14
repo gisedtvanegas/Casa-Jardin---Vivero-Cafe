@@ -375,8 +375,11 @@ body::before {
 .tarjeta-sombra { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.03) 28%, rgba(0,0,0,.77) 100%); }
 .tarjeta-actividad-titulo { position: absolute; right: 18px; bottom: 47px; left: 18px; display: block; font-family: "Montagu Slab", serif; font-size: 1.28rem; font-weight: 700; line-height: 1.2; text-align: left; text-shadow: 0 2px 6px rgba(0,0,0,.65); }
 .tarjeta-indicacion { position: absolute; right: 18px; bottom: 17px; left: 18px; display: block; font-size: .78rem; font-weight: 700; letter-spacing: .05em; text-align: left; text-transform: uppercase; }
-.tarjeta-actividad-reverso { display: grid; place-items: center; padding: 34px 22px; box-sizing: border-box; background: linear-gradient(145deg, #2e6846, #91bd72); color: #fff; transform: rotateY(180deg); }
+.tarjeta-actividad-reverso { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 28px 22px 22px; box-sizing: border-box; background: linear-gradient(145deg, #2e6846, #91bd72); color: #fff; transform: rotateY(180deg); }
 .tarjeta-actividad-reverso > span:first-child { font-family: "Montagu Slab", serif; font-size: 1.7rem; }
+.tarjeta-actividad-informacion { max-height: 52%; overflow: auto; font-family: inherit !important; font-size: .92rem !important; line-height: 1.5; text-align: center; white-space: pre-line; }
+.tarjeta-agenda-btn { display: inline-block; padding: 9px 22px; border-radius: 50px; background: rgba(255,255,255,.22); color: #fff; font-size: .85rem; font-weight: 700; letter-spacing: .04em; text-decoration: none; border: 2px solid rgba(255,255,255,.65); backdrop-filter: blur(4px); transition: background .25s, transform .2s, box-shadow .25s; box-shadow: 0 4px 14px rgba(0,0,0,.18); white-space: nowrap; }
+.tarjeta-agenda-btn:hover { background: rgba(255,255,255,.38); transform: translateY(-2px) scale(1.04); box-shadow: 0 8px 22px rgba(0,0,0,.26); }
 .tarjeta-actividad-reverso .tarjeta-indicacion { text-align: center; }
 .sin-actividades { margin: 40px; }
 
@@ -1538,4 +1541,26 @@ body::before {
     min-height: 130px;
     border-radius: 20px;
   }
+}
+
+.mobile-home { display: none; }
+
+@media (max-width: 768px) {
+  .mobile-home {
+    display: inline-flex;
+    position: fixed;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1100;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 15px;
+    border-radius: 999px;
+    background: #143E5E;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, .24);
+  }
+  .mobile-home span { font-size: .85rem; }
 }

@@ -5,10 +5,10 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Casa y Jardin - Vivero Café</title>
+    <title>Inicio de Sesión - Casa y Jardin</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=4">
     <script src="${ctx}/Vista/JavaScript/validarReg.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
     <div class="barrainicio">

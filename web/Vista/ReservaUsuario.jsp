@@ -6,8 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reserva</title>
+    <title>Reserva - Casa y Jardín</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css">
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>
     <div class="barrainicio">
@@ -22,18 +23,20 @@
                 <span class="bar"></span>
                 <span class="bar"></span>
             </button>
-            <nav class="navegacion">
+            <nav class="navegacion" id="nav-menu">
                 <ul>
                     <li><a href="${ctx}/PanelUsuario.jsp">Inicio</a></li>
-                    <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
+                    <li><a href="${ctx}/ActividadesUsuario">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
                     <li><a href="${ctx}/MenuUsuario">Menú</a></li>
+                    <li><a href="${ctx}/PerfilUsuario">Mi Perfil</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>
     </div>
     <main class="mis-reservas">
         <h2 class="titulo-form">Mis reservas</h2>
+        <c:if test="${not empty mensaje}"><p class="mensaje"><c:out value="${mensaje}"/></p></c:if>
         <c:if test="${empty listaReservasUsuario}"><p class="mensaje">No hay ningún registro de reservas.</p></c:if>
         <c:if test="${not empty listaReservasUsuario}">
             <div class="table-scroll"><table class="crud-table"><thead><tr><th>Actividad</th><th>Personas</th><th>Fecha</th><th>Hora</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>
@@ -55,7 +58,6 @@
     <main id="nuevaReservaModal" class="Formulario modal-nueva-reserva" aria-hidden="true">
         <button type="button" class="cerrar-nueva-reserva" id="cerrarReserva" aria-label="Cerrar">&times;</button>
         <h2 class="titulo-form">Reserva tu actividad</h2>
-        <c:if test="${not empty mensaje}"><p class="mensaje"><c:out value="${mensaje}"/></p></c:if>
         <form id="reservaForm" action="${ctx}/ReservaUsuario" method="post">
             
             <section class="datos">
@@ -69,14 +71,7 @@
             <label>Personas<input type="number" name="num_personas" min="1" max="10" required></label>
             <label>Fecha<input type="date" name="fecha" required></label>
             <label>Hora<input type="time" name="hora" required></label>
-            <label>Disponibilidad
-                <select name="Disponibilidad_idDisponibilidad" required>
-                    <option value="">Seleccione...</option>
-                    <c:forEach var="d" items="${listaDisponibilidades}">
-                        <option value="${d.idDisponibilidad}">${d.fecha} - cupos ${d.cupo_disponible}/${d.cupo_total}</option>
-                    </c:forEach>
-                </select>
-            </label>
+            <p class="mensaje">El cupo del local es de 30 personas. Verificaremos la disponibilidad para la fecha elegida antes de confirmar el pago.</p>
             <label>Actividad
                 <select name="Actividad_idActividad" required>
                     <option value="">Seleccione...</option>
@@ -133,6 +128,8 @@
             <a href="${ctx}/PanelUsuario.jsp">Aceptar</a></div>
     </div>
     <script src="${ctx}/Vista/JavaScript/pagosfa.js"></script>
+    <script src="${ctx}/Vista/JavaScript/hamburguesa.js"></script>
+    <script src="${ctx}/Vista/JavaScript/navegacion-sesion.js"></script>
     <style>
         .mis-reservas { max-width: 1100px; margin: 150px auto 2rem; padding: 0 1rem; }
         .nuevo-lapiz { position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 20; width: 54px; height: 54px; border: 0; border-radius: 50%; background: #166534; color: #fff; font-size: 1.6rem; cursor: pointer; box-shadow: 0 4px 12px #0005; }

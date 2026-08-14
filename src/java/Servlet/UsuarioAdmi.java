@@ -3,6 +3,7 @@ package Servlet;
 import Controlador.UsuariosDAO;
 import Controlador.RolesDAO;
 import Controlador.Tipo_documentoDAO;
+import Controlador.PasswordSecurity;
 import Modelo.Usuarios;
 import java.io.IOException;
 import java.sql.Date;
@@ -69,7 +70,8 @@ public class UsuarioAdmi extends HttpServlet {
         usuario.setdocumento(request.getParameter("documento"));
         usuario.settelefono(request.getParameter("telefono"));
         usuario.setcorreo(request.getParameter("correo"));
-        usuario.setclave(request.getParameter("clave"));
+        String clave = request.getParameter("clave");
+        usuario.setclave(clave == null || clave.trim().isEmpty() ? null : PasswordSecurity.hash(clave));
         usuario.setfecha_nac(Date.valueOf(request.getParameter("fecha_nac")));
 
         String fechaCad = request.getParameter("fecha_cad");

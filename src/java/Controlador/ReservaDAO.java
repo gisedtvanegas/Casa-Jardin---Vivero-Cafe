@@ -13,6 +13,7 @@ import java.time.LocalDate;
 
 public class ReservaDAO {
 
+    private static final int CUPO_LOCAL = 30;
     Conexion conexion = new Conexion();
 
     public boolean insertarReservaPagada(Reserva reserva) throws SQLException {
@@ -21,6 +22,8 @@ public class ReservaDAO {
         boolean autoCommit = con.getAutoCommit();
         try {
             con.setAutoCommit(false);
+            reserva.setDisponibilidad_idDisponibilidad(obtenerDisponibilidadYValidarCupo(
+                    con, reserva.getFecha(), reserva.getHora(), reserva.getNum_personas(), 0));
             reserva.setEstado_reserva_idEstado_reserva(obtenerEstadoConfirmada(con));
             reserva.setPagos_idPagos(insertarPagoPagado(con));
             String sql = "INSERT INTO reserva (num_personas, hora, fecha, Usuarios_idUsuarios, Disponibilidad_idDisponibilidad, Estado_reserva_idEstado_reserva, Actividad_idActividad, Pagos_idPagos) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -30,12 +33,78 @@ public class ReservaDAO {
                 ps.setInt(6, reserva.getEstado_reserva_idEstado_reserva()); ps.setInt(7, reserva.getActividad_idActividad()); ps.setInt(8, reserva.getPagos_idPagos());
                 if (ps.executeUpdate() != 1) throw new SQLException("No se pudo guardar la reserva.");
             }
+            actualizarCupoDisponible(con, reserva.getFecha());
             con.commit();
             return true;
         } catch (SQLException e) {
             con.rollback();
             throw e;
         } finally { con.setAutoCommit(autoCommit); }
+    }
+
+    /** El aforo es diario y fijo: 30 personas para todo el local. */
+    private int obtenerDisponibilidadYValidarCupo(Connection con, Date fecha, java.sql.Time hora, int personas, int idReservaExcluida) throws SQLException {
+        int disponibilidadId = buscarOCrearDisponibilidadDelDia(con, fecha, hora);
+        if (personasReservadasParaFecha(con, fecha, idReservaExcluida) + personas > CUPO_LOCAL) {
+            throw new SQLException("CUPO_NO_DISPONIBLE");
+        }
+        return disponibilidadId;
+    }
+
+    private int buscarOCrearDisponibilidadDelDia(Connection con, Date fecha, java.sql.Time hora) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "SELECT idDisponibilidad FROM disponibilidad WHERE fecha = ? ORDER BY idDisponibilidad LIMIT 1 FOR UPDATE")) {
+            ps.setDate(1, fecha);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        }
+
+        int horarioId;
+        try (PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO horarios (hora_ini, hora_fin) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            ps.setTime(1, hora);
+            ps.setTime(2, hora);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (!rs.next()) throw new SQLException("No se pudo crear el horario de la reserva.");
+                horarioId = rs.getInt(1);
+            }
+        }
+        try (PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO disponibilidad (fecha, cupo_total, cupo_disponible, Horarios_idHorarios) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            ps.setDate(1, fecha);
+            ps.setInt(2, CUPO_LOCAL);
+            ps.setInt(3, CUPO_LOCAL);
+            ps.setInt(4, horarioId);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        }
+        throw new SQLException("No se pudo crear la disponibilidad de la reserva.");
+    }
+
+    private int personasReservadasParaFecha(Connection con, Date fecha, int idReservaExcluida) throws SQLException {
+        String sql = "SELECT COALESCE(SUM(r.num_personas), 0) FROM reserva r "
+                + "JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
+                + "WHERE r.fecha = ? AND LOWER(e.descripcion_esta) <> 'cancelada' AND r.idReserva <> ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setDate(1, fecha);
+            ps.setInt(2, idReservaExcluida);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next() ? rs.getInt(1) : 0; }
+        }
+    }
+
+    private void actualizarCupoDisponible(Connection con, Date fecha) throws SQLException {
+        int disponible = Math.max(0, CUPO_LOCAL - personasReservadasParaFecha(con, fecha, 0));
+        try (PreparedStatement ps = con.prepareStatement(
+                "UPDATE disponibilidad SET cupo_total = ?, cupo_disponible = ? WHERE fecha = ?")) {
+            ps.setInt(1, CUPO_LOCAL);
+            ps.setInt(2, disponible);
+            ps.setDate(3, fecha);
+            ps.executeUpdate();
+        }
     }
 
     private int obtenerEstadoConfirmada(Connection con) throws SQLException {
@@ -208,26 +277,64 @@ public class ReservaDAO {
     }
 
     public boolean actualizarReservaUsuario(int idReserva, int idUsuario, int personas, Date fecha, java.sql.Time hora) throws SQLException {
-        String sql = "UPDATE reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
-                + "SET r.num_personas = ?, r.fecha = ?, r.hora = ? WHERE r.idReserva = ? AND r.Usuarios_idUsuarios = ? "
-                + "AND LOWER(e.descripcion_esta) <> 'cancelada' AND r.fecha > DATE_ADD(CURDATE(), INTERVAL 3 DAY)";
-        try (Connection con = new Conexion().getConn(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, personas); ps.setDate(2, fecha); ps.setTime(3, hora); ps.setInt(4, idReserva); ps.setInt(5, idUsuario);
-            return ps.executeUpdate() == 1;
+        try (Connection con = new Conexion().getConn()) {
+            if (con == null) throw new SQLException("No hay conexion con la base de datos.");
+            boolean autoCommit = con.getAutoCommit();
+            try {
+                con.setAutoCommit(false);
+                Date fechaAnterior = null;
+                try (PreparedStatement consulta = con.prepareStatement("SELECT fecha FROM reserva WHERE idReserva = ? AND Usuarios_idUsuarios = ? FOR UPDATE")) {
+                    consulta.setInt(1, idReserva); consulta.setInt(2, idUsuario);
+                    try (ResultSet rs = consulta.executeQuery()) { if (rs.next()) fechaAnterior = rs.getDate(1); }
+                }
+                if (fechaAnterior == null) { con.rollback(); return false; }
+                int disponibilidadId = obtenerDisponibilidadYValidarCupo(con, fecha, hora, personas, idReserva);
+                String sql = "UPDATE reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
+                        + "SET r.num_personas = ?, r.fecha = ?, r.hora = ?, r.Disponibilidad_idDisponibilidad = ? "
+                        + "WHERE r.idReserva = ? AND r.Usuarios_idUsuarios = ? AND LOWER(e.descripcion_esta) <> 'cancelada' "
+                        + "AND r.fecha > DATE_ADD(CURDATE(), INTERVAL 3 DAY)";
+                try (PreparedStatement ps = con.prepareStatement(sql)) {
+                    ps.setInt(1, personas); ps.setDate(2, fecha); ps.setTime(3, hora); ps.setInt(4, disponibilidadId);
+                    ps.setInt(5, idReserva); ps.setInt(6, idUsuario);
+                    if (ps.executeUpdate() != 1) { con.rollback(); return false; }
+                }
+                actualizarCupoDisponible(con, fechaAnterior);
+                if (!fechaAnterior.equals(fecha)) actualizarCupoDisponible(con, fecha);
+                con.commit();
+                return true;
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            } finally { con.setAutoCommit(autoCommit); }
         }
     }
 
     public boolean cancelarReservaUsuario(int idReserva, int idUsuario) throws SQLException {
         try (Connection con = new Conexion().getConn()) {
             if (con == null) throw new SQLException("No hay conexion con la base de datos.");
-            int estadoCancelada = obtenerOCrearEstado(con, "Cancelada");
-            String sql = "UPDATE reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
-                    + "SET r.Estado_reserva_idEstado_reserva = ? WHERE r.idReserva = ? AND r.Usuarios_idUsuarios = ? "
-                    + "AND LOWER(e.descripcion_esta) <> 'cancelada'";
-            try (PreparedStatement ps = con.prepareStatement(sql)) {
-                ps.setInt(1, estadoCancelada); ps.setInt(2, idReserva); ps.setInt(3, idUsuario);
-                return ps.executeUpdate() == 1;
-            }
+            boolean autoCommit = con.getAutoCommit();
+            try {
+                con.setAutoCommit(false);
+                Date fecha = null;
+                try (PreparedStatement consulta = con.prepareStatement("SELECT fecha FROM reserva WHERE idReserva = ? AND Usuarios_idUsuarios = ? FOR UPDATE")) {
+                    consulta.setInt(1, idReserva); consulta.setInt(2, idUsuario);
+                    try (ResultSet rs = consulta.executeQuery()) { if (rs.next()) fecha = rs.getDate(1); }
+                }
+                int estadoCancelada = obtenerOCrearEstado(con, "Cancelada");
+                String sql = "UPDATE reserva r JOIN estado_reserva e ON e.idEstado_reserva = r.Estado_reserva_idEstado_reserva "
+                        + "SET r.Estado_reserva_idEstado_reserva = ? WHERE r.idReserva = ? AND r.Usuarios_idUsuarios = ? "
+                        + "AND LOWER(e.descripcion_esta) <> 'cancelada'";
+                try (PreparedStatement ps = con.prepareStatement(sql)) {
+                    ps.setInt(1, estadoCancelada); ps.setInt(2, idReserva); ps.setInt(3, idUsuario);
+                    if (ps.executeUpdate() != 1) { con.rollback(); return false; }
+                }
+                if (fecha != null) actualizarCupoDisponible(con, fecha);
+                con.commit();
+                return true;
+            } catch (SQLException e) {
+                con.rollback();
+                throw e;
+            } finally { con.setAutoCommit(autoCommit); }
         }
     }
 

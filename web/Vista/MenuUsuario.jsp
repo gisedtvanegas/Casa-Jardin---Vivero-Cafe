@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Menú | Casa y Jardín</title>
         <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=4">
+         <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
     </head>
 <body>
     <div class="barrainicio">
@@ -26,9 +27,10 @@
             <nav class="navegacion" id="nav-menu">
                 <ul>
                     <li><a href="${ctx}/PanelUsuario.jsp">Inicio</a></li>
-                    <li><a href="${ctx}/ActividadesPublicas">Actividad</a></li>
+                    <li><a href="${ctx}/ActividadesUsuario">Actividad</a></li>
                     <li><a href="${ctx}/ReservaUsuario">Reservas</a></li>
                     <li><a href="${ctx}/MenuUsuario">Menú</a></li>
+                    <li><a href="${ctx}/PerfilUsuario">Mi Perfil</a></li>
                     <li><a href="${ctx}/CerrarSesion">Cerrar Sesión</a></li>
                 </ul>
             </nav>
@@ -80,5 +82,6 @@
             </div>
     </footer> 
     <script src="${ctx}/Vista/JavaScript/hamburguesa.js"></script>
+    <script src="${ctx}/Vista/JavaScript/navegacion-sesion.js"></script>
 </body>
 </html>

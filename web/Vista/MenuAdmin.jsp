@@ -1,7 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Gestionar menú | Casa y Jardín</title><link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=20260721-menu"></head>
+<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Gestionar menú | Casa y Jardín</title>
+        <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=20260721-menu">
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    </head>
 <body class="admin-crud-page"><main class="admin-crud-container admin-crud-container-wide">
     <header class="admin-crud-header"><div><p class="admin-eyebrow">Menú</p><h2>Gestionar productos</h2></div><a class="admin-back" href="${ctx}/PanelAdmin.jsp">Volver al panel</a></header>
     <c:if test="${not empty mensaje}"><div class="mensaje-bienvenida"><p><c:out value="${mensaje}"/></p></div></c:if>

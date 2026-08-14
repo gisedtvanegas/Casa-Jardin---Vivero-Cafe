@@ -6,4 +6,13 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    <session-config>
+        <session-timeout>480</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <!-- Se mantiene false para que funcione en localhost por HTTP. En
+                 producción con HTTPS debe cambiarse a true. -->
+            <secure>false</secure>
+        </cookie-config>
+    </session-config>
 </web-app>

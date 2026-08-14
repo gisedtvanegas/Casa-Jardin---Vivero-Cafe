@@ -13,6 +13,8 @@ public class Actividad {
     
     private int idActividad;
     private String descripcion_actividad;
+    private String informacion;
+    private String foto_actividad;
     private int Tipo_Actividad_idTipo_Actividad;
     private int Lista_Precios_idLista_Precios;
     
@@ -30,6 +32,22 @@ public class Actividad {
     
     public void setdescripcion_actividad (String descripcion_actividad){
         this.descripcion_actividad = descripcion_actividad;
+    }
+
+    public String getinformacion() {
+        return informacion;
+    }
+
+    public void setinformacion(String informacion) {
+        this.informacion = informacion;
+    }
+
+    public String getfoto_actividad() {
+        return foto_actividad;
+    }
+
+    public void setfoto_actividad(String foto_actividad) {
+        this.foto_actividad = foto_actividad;
     }
     
     public int getTipo_Actividad_idTipo_Actividad() {

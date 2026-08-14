@@ -16,6 +16,21 @@ import java.sql.Date;
 public class UsuariosDAO {
 
     Conexion conexion = new Conexion();
+    private static volatile boolean columnaFotoVerificada;
+
+    private void asegurarColumnaFoto(Connection con) throws SQLException {
+        if (columnaFotoVerificada) return;
+        synchronized (UsuariosDAO.class) {
+            if (columnaFotoVerificada) return;
+            try (PreparedStatement ps = con.prepareStatement("ALTER TABLE usuarios ADD COLUMN foto_perfil VARCHAR(255) NULL")) {
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                String mensaje = e.getMessage() == null ? "" : e.getMessage().toLowerCase();
+                if (!mensaje.contains("duplicate column")) throw e;
+            }
+            columnaFotoVerificada = true;
+        }
+    }
 
     public boolean insertarUsuarios(Usuarios usuarios) throws SQLException {
         boolean insertado = false;
@@ -49,7 +64,7 @@ public class UsuariosDAO {
             throw e;
         }
         return insertado;
-    }
+        }
 
     public Usuarios ConsultaUsuarios(String documento) {
         Usuarios usuario = null;
@@ -57,7 +72,8 @@ public class UsuariosDAO {
         Connection con = conexion.getConn();
 
         try {
-            String querySQL = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM usuarios WHERE documento = ? ";
+            asegurarColumnaFoto(con);
+            String querySQL = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles, foto_perfil FROM usuarios WHERE documento = ? ";
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setString(1, documento);
 
@@ -78,6 +94,7 @@ public class UsuariosDAO {
                 usuario.setcheckbox(rs.getBoolean(10));
                 usuario.setTipo_documento_idTipo_documento(rs.getInt(11));
                 usuario.setRoles_idRoles(rs.getInt(12));
+                usuario.setfoto_perfil(rs.getString(13));
 
             }
 
@@ -128,7 +145,8 @@ public class UsuariosDAO {
     Connection con = conexion.getConn();
 
     try {
-            String querySQL = "SELECT nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM usuarios WHERE idUsuarios = ?";
+            asegurarColumnaFoto(con);
+            String querySQL = "SELECT nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles, foto_perfil FROM usuarios WHERE idUsuarios = ?";
             PreparedStatement ps = con.prepareStatement(querySQL);
             ps.setInt(1, idUsuarios);
 
@@ -148,6 +166,7 @@ public class UsuariosDAO {
                 usuario.setcheckbox(rs.getBoolean("checkbox"));
                 usuario.setTipo_documento_idTipo_documento(rs.getInt("Tipo_documento_idTipo_documento"));
                 usuario.setRoles_idRoles(rs.getInt("Roles_idRoles"));
+                usuario.setfoto_perfil(rs.getString("foto_perfil"));
             }
 
             return usuario;
@@ -160,7 +179,7 @@ public class UsuariosDAO {
 
     public boolean actualizarUsuario(Usuarios usuarios) throws SQLException {
         boolean actualizado = false;
-        String sql = "UPDATE usuarios SET nombre=?, apellido=?, documento=?, telefono=?, correo=?, clave=?, fecha_nac=?, fecha_cad=?, checkbox=?, Tipo_documento_idTipo_documento=?, Roles_idRoles=? WHERE idUsuarios=?";        Conexion conexion = new Conexion();
+        String sql = "UPDATE usuarios SET nombre=?, apellido=?, documento=?, telefono=?, correo=?, clave=COALESCE(?, clave), fecha_nac=?, fecha_cad=?, checkbox=?, Tipo_documento_idTipo_documento=?, Roles_idRoles=? WHERE idUsuarios=?";        Conexion conexion = new Conexion();
         Connection con = (Connection) conexion.getConn();
 
         try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -223,9 +242,10 @@ public class UsuariosDAO {
         List<Usuarios> lista = new ArrayList<>();
         Conexion conexion = new Conexion();
         Connection con = conexion.getConn();
-        String sql = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles FROM usuarios";
-
-        try (PreparedStatement ps = con.prepareStatement(sql)){
+        try {
+            asegurarColumnaFoto(con);
+            String sql = "SELECT idUsuarios, nombre, apellido, documento, telefono, correo, clave, fecha_nac, fecha_cad, checkbox, Tipo_documento_idTipo_documento, Roles_idRoles, foto_perfil FROM usuarios";
+            PreparedStatement ps = con.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {
@@ -242,6 +262,7 @@ public class UsuariosDAO {
                 usuario.setcheckbox(rs.getBoolean(10));
                 usuario.setTipo_documento_idTipo_documento(rs.getInt(11));
                 usuario.setRoles_idRoles(rs.getInt(12));
+                usuario.setfoto_perfil(rs.getString(13));
                 
 
                 lista.add(usuario);
@@ -250,5 +271,29 @@ public class UsuariosDAO {
             System.out.println("Error al listar usuarios: " + e.getMessage());
         }
         return lista;
+    }
+
+    public boolean actualizarPerfil(int idUsuario, String nombre, String correo, String telefono, String fotoPerfil) throws SQLException {
+        boolean actualizado = false;
+        String sql = "UPDATE usuarios SET nombre = ?, correo = ?, telefono = ?, foto_perfil = ? WHERE idUsuarios = ?";
+        Connection con = conexion.getConn();
+        if (con == null) {
+            throw new SQLException("No fue posible conectar con la base de datos.");
+        }
+        asegurarColumnaFoto(con);
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, nombre);
+            ps.setString(2, correo);
+            ps.setString(3, telefono);
+            ps.setString(4, fotoPerfil);
+            ps.setInt(5, idUsuario);
+            if (ps.executeUpdate() > 0) {
+                actualizado = true;
+            }
+        } catch (SQLException e) {
+            System.out.println("Error al actualizar perfil de usuario: " + e.getMessage());
+            throw e;
+        }
+        return actualizado;
     }
 }

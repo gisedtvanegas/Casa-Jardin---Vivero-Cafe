@@ -8,6 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Actividades - Casa y Jardin</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css">
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
+    <style>
+        .foto-miniatura { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; display: block; }
+        .foto-miniatura-placeholder { width: 64px; height: 64px; border-radius: 8px; background: #e8f0eb; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+        .input-foto-actual { display: none; }
+    </style>
 </head>
 <body class="admin-crud-page">
     <main class="admin-crud-container">
@@ -23,9 +29,15 @@
             <div class="mensaje-bienvenida"><p>${mensaje}</p></div>
         </c:if>
 
-        <form class="crud-form" action="${ctx}/Actividad" method="POST">
+        <%-- Formulario de inserción: multipart/form-data para permitir subida de imagen --%>
+        <form class="crud-form" action="${ctx}/Actividad" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="accion" value="insertar">
             <label>Descripcion<input type="text" name="descripcionAct" required></label>
+            <label>Información de la tarjeta<textarea name="informacionAct" maxlength="1000" required placeholder="Describe qué incluye, duración, materiales y recomendaciones."></textarea></label>
+            <label>Foto de la actividad
+                <input type="file" name="fotoActividad" accept="image/*">
+                <small style="color:#6b8e6b;font-size:.82rem;">Opcional · Formatos: JPG, PNG, WEBP (máx. 5 MB)</small>
+            </label>
             <label>Tipo de actividad
                 <select name="tipoActi" required>
                     <option value="">Seleccione...</option>
@@ -49,6 +61,9 @@
             <thead>
                 <tr>
                     <th>Descripcion</th>
+                    <th>Información de la tarjeta</th>
+                    <th>Foto actual</th>
+                    <th>Nueva foto</th>
                     <th>Tipo de actividad</th>
                     <th>Lista de precios</th>
                     <th>Acciones</th>
@@ -57,9 +72,27 @@
             <tbody>
                 <c:forEach var="actividad" items="${listaActividades}">
                     <tr>
-                        <form action="${ctx}/Actividad" method="POST">
+                        <%-- Formulario de actualización también con multipart --%>
+                        <form action="${ctx}/Actividad" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="idActividad" value="${actividad.idActividad}">
+                            <%-- Foto actual guardada en BD, se conserva si no se sube una nueva --%>
+                            <input type="hidden" name="fotoActual" value="${actividad.foto_actividad}" class="input-foto-actual">
                             <td><input type="text" name="descripcionAct" value="${actividad.descripcion_actividad}" required></td>
+                            <td><textarea name="informacionAct" maxlength="1000" required><c:out value="${actividad.informacion}"/></textarea></td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty actividad.foto_actividad}">
+                                        <img class="foto-miniatura" src="${ctx}/${actividad.foto_actividad}" alt="Foto de ${actividad.descripcion_actividad}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="foto-miniatura-placeholder">🌿</div>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                            <td>
+                                <input type="file" name="fotoActividad" accept="image/*">
+                                <small style="color:#6b8e6b;font-size:.78rem;">Deja vacío para conservar la actual</small>
+                            </td>
                             <td>
                                 <select name="tipoActi" required>
                                     <c:forEach var="tipo" items="${listaTiposActividad}">

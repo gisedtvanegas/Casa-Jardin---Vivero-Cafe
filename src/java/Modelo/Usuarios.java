@@ -23,6 +23,7 @@ public class Usuarios {
     private boolean checkbox;
     private int Tipo_documento_idTipo_documento;
     private int Roles_idRoles;
+    private String foto_perfil;
     
     
     public int getidUsuarios () {
@@ -119,6 +120,14 @@ public class Usuarios {
     
     public void setRoles_idRoles( int Roles_idRoles) {
         this.Roles_idRoles = Roles_idRoles; 
+    }
+
+    public String getfoto_perfil() {
+        return foto_perfil;
+    }
+
+    public void setfoto_perfil(String foto_perfil) {
+        this.foto_perfil = foto_perfil;
     }
 
     

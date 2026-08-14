@@ -6,9 +6,10 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa y Jardin - Vivero Café</title>
+    <title>Registrarse - Casa y Jardin</title>
     <link rel="stylesheet" href="${ctx}/Vista/Css/style.css?v=4">
     <script src="${ctx}/Vista/JavaScript/validarReg.js"></script>
+     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
 </head>
 <body>   
     <div class="barrainicio">

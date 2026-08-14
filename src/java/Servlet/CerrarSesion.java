@@ -19,7 +19,12 @@ public class CerrarSesion extends HttpServlet {
         if (sesion != null) {
             sesion.invalidate();
         }
-        // Redirige al inicio
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        // Borra cualquier copia de vistas privadas que el navegador pudiera
+        // conservar. Las cabeceras del filtro cubren también el historial.
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setHeader("Clear-Site-Data", "\"cache\"");
+        response.sendRedirect(request.getContextPath() + "/Vista/InicioSesion.jsp?mensaje=Sesion%20cerrada");
     }
 }
