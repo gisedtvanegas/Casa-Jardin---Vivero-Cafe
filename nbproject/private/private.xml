@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/PanelUsuario.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/Css/style.css</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/ReservaDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/ProductoImagen.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Modelo/Tipo_Actividad.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/Tipo_documentoDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/RolesDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/Actividad.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/ReservaUsuario.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/Menu.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Filtros/Filtro.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/InicioSesion.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Modelo/Tipo_documento.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/HorariosDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/MenuUsuario.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/DisponibilidadDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Modelo/Usuarios.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/Lista_preciosDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/Registrarse.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/index.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/ActividadUsuario.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Modelo/Reserva.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/MenuUsuario.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/Actividad_admi.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/ReservaUsuario.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/Conexion.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/ActividadesPublicas.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/MenuPublico.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/PagosDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/Pagosfake.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Modelo/Horarios.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/ProductoMenuDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/UsuariosDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/MenuAdmin.jsp</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Servlet/ProductosMenu.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/Tipo_ActividadDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Controlador/Estado_reservaDAO.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/src/java/Modelo/ProductoMenu.java</file>
+            <file>file:/C:/Users/gised/OneDrive/Documentos/Cafeteriatalleres%20crud%2024-06-26/web/Vista/InicioSesion.jsp</file>
+        </group>
+    </open-files>
+</project-private>
